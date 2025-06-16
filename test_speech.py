@@ -16,4 +16,4 @@ def test_google_speech():
     for result in response.results:
         print("🎤 Transcripción:", result.alternatives[0].transcript)
 
-test_google_speech()
+test_google_speech()    
