@@ -22,11 +22,12 @@ Transcripciones/
 *.md
 # Archivos sensibles
 credenciales.json
+*.json
 
 # Entornos virtuales
 venv/
 env/
-.venv/
+ENV/
 
 # VSCode / IDEs
 .vscode/
@@ -35,3 +36,7 @@ env/
 # Mac / Linux / Windows
 .DS_Store
 Thumbs.db
+
+# Archivos temporales
+*.tmp
+*.temp
