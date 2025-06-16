@@ -30,9 +30,13 @@ def main_app():
         save_folder = "archivos_subidos"
         os.makedirs(save_folder, exist_ok=True)
         
-        # Genera un nombre de archivo dinámico manteniendo la extensión original
-        file_extension = os.path.splitext(archivo.name)[1]
-        destino = os.path.join(save_folder, f"entrada{file_extension}")
+        # Obtener el nombre de archivo original y la extensión
+        original_file_name = archivo.name
+        original_file_base_name = os.path.splitext(original_file_name)[0]
+        file_extension = os.path.splitext(original_file_name)[1]
+        
+        # Usar el nombre de archivo original para guardar
+        destino = os.path.join(save_folder, original_file_name)
         
         # Elimina el archivo existente si tiene la misma extensión
         if os.path.exists(destino):
@@ -59,7 +63,7 @@ def main_app():
                             procesador = ProcesadorVideo(destino)
                             procesador.procesar_y_subir()
                             texto = procesador.send_transcripcion_gemini()
-                            CrearDocumentos(texto)
+                            CrearDocumentos(texto, original_file_base_name) # Pasar el nombre base del archivo
                         st.success("Video transcrito con exito! 💪🦁")
                         
                     # Mostrar documentos.
@@ -69,24 +73,32 @@ def main_app():
                     tab2.subheader("La transcripcion en formato WORD")
                     tab3.subheader("La transcripcion en formato TEXTO")
                     
+                    # Rutas de los nuevos archivos generados
+                    pdf_file_name = f"{original_file_base_name}.pdf"
+                    docx_file_name = f"{original_file_base_name}.docx"
+                    md_file_name = f"{original_file_base_name}.md"
+
                     # Leer el archivo PDF y codificarlo en base64
-                    if os.path.exists("Transcripcion.md"):
-                        documento_path = "Transcripcion.pdf"
-                        with open(documento_path, "rb") as f:
+                    if os.path.exists(pdf_file_name):
+                        with open(pdf_file_name, "rb") as f:
                             base64_pdf = base64.b64encode(f.read()).decode('utf-8')
                         # Crear un iframe para mostrar el PDF
                         pdf_mostrar = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf"></iframe>'
                         tab1.markdown(pdf_mostrar, unsafe_allow_html=True)
                     
-                        with open("Transcripcion.docx", "rb") as file:
-                            contenido = file.read()
-                            tab2.download_button(
-                                label="Descargar documento Word",
-                                data=contenido,
-                                file_name="Transcripcion.docx",
-                                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                            )
-                        tab3.code(texto)
+                        if os.path.exists(docx_file_name):
+                            with open(docx_file_name, "rb") as file:
+                                contenido = file.read()
+                                tab2.download_button(
+                                    label="Descargar documento Word",
+                                    data=contenido,
+                                    file_name=docx_file_name, # Usar el nombre dinámico aquí
+                                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                )
+                        if os.path.exists(md_file_name):
+                            with open(md_file_name, "r", encoding="utf-8") as f:
+                                texto_md = f.read()
+                            tab3.code(texto_md)
 
 if __name__ == '__main__':
     verificar_credenciales()
