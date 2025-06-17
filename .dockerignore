@@ -1,25 +1,61 @@
 # Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
+*.py[cod]
+*.so
 env/
 venv/
 .env/
 .venv/
+*.egg
+*.egg-info/
+dist/
+build/  
 
-# IDEs
+# IDEs y editores
 .idea/
 .vscode/
-
-# Archivos temporales
 *.swp
 *.swo
 *~
+.DS_Store
+Thumbs.db
 
-# No ignorar estos archivos importantes
+# Archivos temporales y de desarrollo
+*.log
+*.tmp
+*.bak
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Archivos de datos temporales que no deben estar en la imagen final
+audio_segments/
+archivos_subidos/
+Transcripcion.*
+Transcripciones/
+*.mp3
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Documentación y archivos de control de versiones
+*.md
+.git/
+.gitignore
+LICENSE
+
+# Archivos sensibles (asegurarse de no ignorar credenciales.json)
+*.pem
+*.key
+*.crt
+
+# Incluir explícitamente lo necesario
 !requirements.txt
 !credenciales.json
 !app.py
-!*.py
+!AgenteIA.py
+!CorteVideos.py
+!Documento_Convertir.py
+!transcripcion_mp3.py

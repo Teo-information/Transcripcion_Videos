@@ -4,20 +4,19 @@ from CorteVideos import ProcesadorVideo
 from Documento_Convertir import CrearDocumentos, vaciar_documento, vaciar_videos_audios
 from transcripcion_mp3 import transcribir_audio_mp3, segmentar_por_temas
 import base64
+from google.cloud import storage
 
 def verificar_credenciales():
-    cred_path = os.path.abspath("credenciales.json")
-    if not os.path.exists(cred_path):
-        st.error(f"❌ No se encontró el archivo de credenciales en: {cred_path}")
+    # Verificar credenciales
+    try:
+        # Intentar inicializar el cliente de Storage
+        storage_client = storage.Client()
+        # Si llegamos aquí, las credenciales son válidas
+        st.success("✅ Credenciales de Google Cloud verificadas correctamente")
+    except Exception as e:
+        st.error(f"❌ Error al verificar credenciales: {str(e)}")
         st.stop()
 
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = cred_path
-
-    if not os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") or not os.path.exists(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]):
-        st.error("❌ No se pudo establecer la variable de entorno GOOGLE_APPLICATION_CREDENTIALS correctamente.")
-        st.stop()
-    
-    st.success("✅ Credenciales encontradas y variable de entorno establecida correctamente.")
 def main_app():
     st.title("Transcripción de Audios MP3 🎵", False)
     st.write("Esta aplicación permite transcribir archivos .mp3 a texto y segmentar por temas.")

@@ -2,18 +2,16 @@ import os
 import time
 import vertexai
 from datetime import datetime
-from dotenv import load_dotenv
 from langchain_google_vertexai import ChatVertexAI
 from langchain_core.messages import HumanMessage, SystemMessage
 
-load_dotenv()
-os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+# Obtener variables de entorno (Cloud Run las proporcionará)
 bucket_name = os.getenv("BUCKET_NAME")
 location_l = os.getenv("LOCATION")
 project_id = os.getenv("PROJECT_ID")
 
+# Inicializar Vertex AI
 vertexai.init(project=project_id, location=location_l)
-
 
 fecha = datetime.now()
 fecha_actual = fecha.strftime("%d de %B del %Y")

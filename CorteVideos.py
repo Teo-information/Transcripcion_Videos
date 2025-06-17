@@ -33,7 +33,7 @@ class ProcesadorVideo:
             raise ValueError("Tipo de archivo no soportado. Por favor, sube un video o un archivo MP3.")
 
         duration = audio_clip.duration
-        segment_duration = 1500  # 10 minutos (25 minutos en realidad)
+        segment_duration = 300  # 5 minutos
         self.num_segments = math.ceil(duration / segment_duration)
 
         for i in range(self.num_segments):

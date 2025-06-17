@@ -1,0 +1,38 @@
+steps:
+# Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/transcripcion', '.']
+
+# Push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/transcripcion']
+
+# Deploy container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+  - 'run'
+  - 'deploy'
+  - 'transcripcion'
+  - '--image'
+  - 'gcr.io/$PROJECT_ID/transcripcion'
+  - '--region'
+  - 'us-central1'
+  - '--platform'
+  - 'managed'
+  - '--allow-unauthenticated'
+  - '--service-account'
+  - 'transcripcion-service@$PROJECT_ID.iam.gserviceaccount.com'
+  - '--memory'
+  - '4Gi'
+  - '--cpu'
+  - '2'
+  - '--timeout'
+  - '3600'
+  - '--port'
+  - '8080'
+  - '--set-env-vars'
+  - 'BUCKET_NAME=virtual-ellipse-460616,LOCATION=us-central1,PROJECT_ID=virtual-ellipse-460616'
+
+images:
+- 'gcr.io/$PROJECT_ID/transcripcion' 
