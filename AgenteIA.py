@@ -104,12 +104,22 @@ def generar_transcripcion(base_filename: str, num_segments: int):
     respuesta_anterior = ""
 
     for i in range(num_segments):
-        archivo_input = {
-            "type": "image_url",
-            "image_url": {
-                "url": f"gs://{bucket_name}/{base_filename}/{base_filename}_part_{i+1}.mp3"
-            },
-        }
+        if num_segments == 1:
+            # Solo un segmento: usar el nombre base tal cual, sin agregar .mp3 extra
+            archivo_input = {
+                "type": "image_url",
+                "image_url": {
+                    "url": f"gs://{bucket_name}/{base_filename}/{base_filename}"
+                },
+            }
+        else:
+            # Varios segmentos: usar el sufijo _part_{i+1}
+            archivo_input = {
+                "type": "image_url",
+                "image_url": {
+                    "url": f"gs://{bucket_name}/{base_filename}/{base_filename}_part_{i+1}.mp3"
+                },
+            }
 
         if respuesta_anterior:
             text_message = (
