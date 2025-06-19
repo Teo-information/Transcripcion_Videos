@@ -86,6 +86,9 @@ def main_app():
                     transcripciones_unidas = ""
                     nombre_base_unido = "transcripcion_unificada"
                     for archivo in archivos_procesados:
+                        if not os.path.exists(archivo['ruta']):
+                            st.error(f"El archivo {archivo['ruta']} no existe. Sube de nuevo este fragmento.")
+                            continue
                         st.write(f"Procesando archivo: {archivo['nombre']}")
                         procesador = ProcesadorVideo(archivo['ruta'])
                         procesador.procesar_y_subir()

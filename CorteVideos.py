@@ -18,7 +18,7 @@ class ProcesadorVideo:
         storage_client = storage.Client()
         bucket = storage_client.bucket(self.bucket_name)
         blob = bucket.blob(destination_blob_name)
-        blob.upload_from_filename(file_path)
+        blob.upload_from_filename(file_path, timeout=300)
         return f"gs://{self.bucket_name}/{destination_blob_name}"
 
     def procesar_y_subir(self):
