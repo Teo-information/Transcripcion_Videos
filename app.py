@@ -5,6 +5,7 @@ from Documento_Convertir import CrearDocumentos, vaciar_documento, vaciar_videos
 from transcripcion_mp3 import transcribir_audio_mp3, segmentar_por_temas
 import base64
 from google.cloud import storage
+import time
 
 def verificar_credenciales():
     # Verificar credenciales
@@ -83,6 +84,20 @@ def main_app():
     st.header("2. Segundo", False)
     st.write("Genera tu transcripcion aqui ✅.")
     if archivos_procesados:
+        # --- NUEVO: Ordenar fragmentos por número antes de transcribir ---
+        nombres_archivos = [a['nombre'] for a in archivos_procesados]
+        fragmentos_detectados = [a for a in archivos_procesados if '_part_' in a['nombre']]
+        otros_archivos = [a for a in archivos_procesados if '_part_' not in a['nombre']]
+        if fragmentos_detectados:
+            # Ordenar por número de fragmento
+            def extrae_numero(nombre):
+                try:
+                    return int(nombre.split('_part_')[1].split('.')[0])
+                except Exception:
+                    return 0
+            fragmentos_ordenados = sorted(fragmentos_detectados, key=lambda a: extrae_numero(a['nombre']))
+            archivos_procesados = otros_archivos + fragmentos_ordenados
+        # --- FIN NUEVO ---
         if st.button("Generar Transcripcion", icon= "📝"):
             with st.chat_message("ai"):
                 spinner = st.spinner("Generando transcripciones...", show_time=True)
