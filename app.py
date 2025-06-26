@@ -67,11 +67,16 @@ def main_app():
                 'ruta': destino,
                 'nombre_base': original_file_base_name
             })
-            
-            st.success(f"Archivo guardado: {original_file_name}")
-            st.video(destino)
-        
         st.info(f"Total de archivos cargados: {len(archivos_procesados)}")
+
+        # Mostrar archivos en un expander (solo aquí)
+        with st.expander("Ver archivos subidos (fragmentos)", expanded=False):
+            for archivo in archivos_procesados:
+                st.success(f"Archivo guardado: {archivo['nombre']}")
+                if archivo['ruta'].lower().endswith('.mp3'):
+                    st.audio(archivo['ruta'])
+                else:
+                    st.video(archivo['ruta'])
     st.divider()
     
     # Transcribir los videos
